@@ -1,6 +1,10 @@
 /*
  * Промисификация:
  * - Поблема доступа к результату промиса с колбеком
+ * - Самая важная концепция: результат промиса нельзя получить нигдк, кроме как внутри
+ * колбек ф-ций, которые мы передаем в then и catch, это колбек ф-ции ассинхронные,
+ * и они выполняться когда нибудь потом когда Promise резолвниться или релжектниться
+ * Поэтому как-то магически дать результат промиса во внешний код невозможно
  * - Функция которая возвращает промис
  */
 
@@ -12,10 +16,10 @@
 
 //     setTimeout(() => {
 //       if (passed) {
-//         resolve(`✅ Вот ваш заказ: ${dish}`);
+//         resolve('Вот ваше блюдо');
 //       }
 
-//       reject('❌ Упс, у нас закончились продукты');
+//       reject('Извините закончились продукты');
 //     }, DELAY);
 //   });
 // };
@@ -39,7 +43,7 @@
  */
 
 // const makeOrder = dish => {
-//   return Promise.resolve(`✅ Вот ваш заказ: ${dish}`);
+//   return Promise.resolve(`Вот ваш заказ ${dish}`);
 // };
 
 // makeOrder('пирожок').then(onMakeOrderSuccess);
@@ -69,31 +73,28 @@
 // fetchPokemonById(3).then(onFetchSuccess).catch(onFetchError);
 
 // function onFetchSuccess(pokemon) {
-//   console.log('onFetchSuccess -> onFetchSuccess');
+//   console.log('onFetchSuccess');
 //   console.log(pokemon);
 // }
 
 // function onFetchError(error) {
-//   console.log('onFetchError -> onFetchError');
-//   console.log('Это в блоке catch');
+//   console.log('onFetchError');
 //   console.log(error);
 // }
 
-// makePromise
-// const makePromise = () => {
-//   return new Promise((resolve, reject) => {
-//     const passed = Math.random() > 0.5;
+const makePromise = () => {
+  return new Promise((resolve, reject) => {
+    const passed = Math.random() > 0.5;
 
-//     setTimeout(() => {
-//       if (passed) {
-//         resolve('✅ Куку это resolve');
-//       }
+    setTimeout(() => {
+      if (passed) {
+        resolve('куку, все хорошо, это resolve');
+      }
 
-//       reject('❌ все пропало это reject');
-//     }, 2000);
-//   });
-// };
-
-// makePromise()
-//   .then(result => console.log(result))
-//   .catch(error => console.log(error));
+      reject('все пропало, это reject');
+    }, 2000);
+  });
+};
+makePromise()
+  .then(result => console.log(result))
+  .catch(error => console.log(error));

@@ -4,6 +4,15 @@
  *  - resolve
  *  - reject
  *  - Promise.prototype.then(onResolve, onReject)
+ *
+ *
+ * new Promise()- принимает аргументом коллбек-ф-цию, которая всегда своим параметром принимает
+ * 2 аргумента - resolve и reject
+ *
+ * resolve(value) - функция для вызова при успешной операции.
+ * Переданный ей аргумент будет значением выполненного промиса.
+ *  reject(error) - функция для вызвова в случае ошибки.
+ * Переданный ей аргумент будет значением отклоненного промиса.
  */
 
 const promise = new Promise((resolve, reject) => {
@@ -11,23 +20,29 @@ const promise = new Promise((resolve, reject) => {
 
   setTimeout(() => {
     if (canFulfill) {
-      resolve('Промис выполнился успешно, с результатом (исполнен, fulfilled)');
+      resolve('Промис выполнился успешно с результатом (исполнен fullfiled)');
     }
-
-    reject('Промис выполнился с ошибкой (отклонён, rejected)');
+    reject('Промис выполнился с ошибкой (отклонен, rejected)');
   }, 1000);
 });
 
-// promise.then(onFulfilled, onRejected);
+//*  метод then() - если промис выполниться успешно, тогда...
+// then(onSuccess, onError)
+// onSuccess - ф-ция будет отвечать за обработку успешного результата
+// onError - ф-ция будет отвечать за обработку ошибки
 
-function onFulfilled(result) {
-  console.log('onFulfilled -> onFulfilled');
-  console.log(`✅ ${result}`);
+// then - возращает еще один промис, и его значением будетто что возращает внутренняя колбек ф-ция
+
+// promise.then(onFullfilled, onRejected);
+
+function onFullfilled(result) {
+  console.log('Выполнился onFullfilled');
+  console.log(`${result}`);
 }
 
 function onRejected(error) {
-  console.log('onRejected -> onRejected');
-  console.log(`❌ ${error}`);
+  console.log(' Выполнился onRejected');
+  console.log(`${error}`);
 }
 
 /*
@@ -35,9 +50,8 @@ function onRejected(error) {
  * Promise.prototype.catch(error)
  * Promise.prototype.finally()
  */
-
 promise
-  .then(onFulfilled)
+  .then(onFullfilled)
   .then(x => {
     console.log(x);
 
@@ -47,4 +61,6 @@ promise
     console.log(y);
   })
   .catch(error => console.log(error))
-  .finally(() => console.log('Я буду выполнен в любом случае'));
+  .finally(() => {
+    console.log('Я буду выполнен в любом случае');
+  });
